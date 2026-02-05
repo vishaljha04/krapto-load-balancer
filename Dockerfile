@@ -1,11 +1,14 @@
 FROM nginx:alpine
 
+# Install CA certificates
+RUN apk add --no-cache ca-certificates && \
+    update-ca-certificates
+
 # Copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Simple health check
-RUN echo '#!/bin/sh' > /healthcheck.sh && \
-    echo 'wget -q -O- http://localhost/health > /dev/null 2>&1' >> /healthcheck.sh && \
-    chmod +x /healthcheck.sh
+# Copy custom SSL certificates if needed (optional)
+# COPY ssl/ca-certificates.crt /usr/local/share/ca-certificates/
+# RUN update-ca-certificates
 
 EXPOSE 80
